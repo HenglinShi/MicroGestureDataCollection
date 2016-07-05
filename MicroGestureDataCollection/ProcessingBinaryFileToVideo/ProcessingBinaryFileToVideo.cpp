@@ -372,32 +372,18 @@ int main()
 	VideoWriter bodyIndexVideoWriter(bodyIndexVideoPath.c_str(), fourcc, 28, depthFrameSize, true);
 	VideoWriter bodyVideoWriter(bodyVideoPath.c_str(), fourcc, 28, depthFrameSize, true);
 
-	//!colorVideoWriter.isOpened() ||
-	if (!depthVideoWriter.isOpened() || !bodyIndexVideoWriter.isOpened() || !bodyVideoWriter.isOpened()) {
+	
+	if (!colorVideoWriter.isOpened() || !depthVideoWriter.isOpened() || !bodyIndexVideoWriter.isOpened() || !bodyVideoWriter.isOpened()) {
 		cout << "!!! Output video could not be opened" << std::endl;
 		return -1;
 	}
 
-	//for (int i = 0; i < fileNames.size(); i++) {
-	//	cout << dirPath + "\\color\\" + fileNames.at(i) << endl;
-	//	colorDataIn.open((dirPath + "\\color\\" + fileNames.at(i)).c_str(), ios_base::in | ios_base::binary);
-	//	colorDataIn.read(reinterpret_cast<char*> (yuy2DataArray), sizeof(BYTE) * yuy2ArraySize);
-
-
-	//	convertingYUYV2RGB(yuy2DataArray, rgbDataArray);
-	//	colorFrameMat = Mat(1080, 1920, CV_8UC3, rgbDataArray);
-	//	imshow("color image", colorFrameMat);
-	//	waitKey(1);
-	//	colorVideoWriter.write(colorFrameMat);
-	//	colorDataIn.close();
-	//	memset(rgbDataArray, 0, rgbArraySize);
-	//	memset(yuy2DataArray, 10, yuy2ArraySize);
-	//}
-
-
 
 	for (int i = 0; i < fileNames.size(); i++) {
 		cout << dirPath + "\\color\\" + fileNames.at(i) << endl;
+
+		colorDataIn.open((dirPath + "\\color\\" + fileNames.at(i)).c_str(), ios_base::in | ios_base::binary);
+		colorDataIn.read(reinterpret_cast<char*> (yuy2DataArray), sizeof(BYTE) * yuy2ArraySize);
 
 		depthDataIn.open((dirPath + "\\depth\\" + fileNames.at(i)).c_str(), ios_base::in | ios_base::binary);
 		depthDataIn.read(reinterpret_cast<char*> (depthFrameArray_rawDepth), sizeof(UINT16) * size_depthFrameArray_rawDepth);
@@ -405,29 +391,14 @@ int main()
 		bodyIndexDataIn.open((dirPath + "\\bodyIndex\\" + fileNames.at(i)).c_str(), ios_base::in | ios_base::binary);
 		bodyIndexDataIn.read(reinterpret_cast<char*> (bodyIndexFrameArray_rawBodyIndex), sizeof(BYTE) * size_depthFrameArray_rawDepth);
 
-
-
 		bodyDataIn.open((dirPath + "\\body\\" + fileNames.at(i)).c_str(), ios_base::in | ios_base::binary);
 		bodyDataIn.read(reinterpret_cast<char*>(bodyFrameRead), skeletonSize);
 
-		for (int i = 0; i < JointType_Count; i++) {
-			jointPoints[i].x = bodyFrameRead[i * 9 + 7];
-			jointPoints[i].y = bodyFrameRead[i * 9 + 8];
-		}
+		//Processing color frame
+		convertingYUYV2RGB(yuy2DataArray, rgbDataArray);
+		colorFrameMat = Mat(1080, 1920, CV_8UC3, rgbDataArray);
 
-		bodyFrameMat = Mat::zeros(424, 512, CV_8UC3);
-		bodyFrameMat = drawAperson(jointPoints, skeletonColor, 7, bodyFrameMat);
-
-		for (UINT i = 0; i < size_depthFrameArray_rawDepth; i++) {
-			bodyIndexFrameArray_BGR[i * 3] = bodyIndexFrameArray_rawBodyIndex[i] & 0x01 ? 0x00 : 0xFF;
-			bodyIndexFrameArray_BGR[i * 3 + 1] = bodyIndexFrameArray_rawBodyIndex[i] & 0x02 ? 0x00 : 0xFF;
-			bodyIndexFrameArray_BGR[i * 3 + 2] = bodyIndexFrameArray_rawBodyIndex[i] & 0x04 ? 0x00 : 0xFF;
-
-
-		}
-		bodyIndexFrameMat = Mat(424, 512, CV_8UC3, bodyIndexFrameArray_BGR);
-
-
+		//Processing depth frame
 		for (int i = 0; i < size_depthFrameArray_rawDepth; i++) {
 			USHORT depth = depthFrameArray_rawDepth[i];
 
@@ -443,21 +414,44 @@ int main()
 		}
 		depthFrameMat = Mat(424, 512, CV_8UC3, depthFrameArray_BGR);
 
+		//processing body index frame
+		for (UINT i = 0; i < size_depthFrameArray_rawDepth; i++) {
+			bodyIndexFrameArray_BGR[i * 3] = bodyIndexFrameArray_rawBodyIndex[i] & 0x01 ? 0x00 : 0xFF;
+			bodyIndexFrameArray_BGR[i * 3 + 1] = bodyIndexFrameArray_rawBodyIndex[i] & 0x02 ? 0x00 : 0xFF;
+			bodyIndexFrameArray_BGR[i * 3 + 2] = bodyIndexFrameArray_rawBodyIndex[i] & 0x04 ? 0x00 : 0xFF;
+		}
+		bodyIndexFrameMat = Mat(424, 512, CV_8UC3, bodyIndexFrameArray_BGR);
+
+
+		//Processing body Frame
+		for (int i = 0; i < JointType_Count; i++) {
+			jointPoints[i].x = bodyFrameRead[i * 9 + 7];
+			jointPoints[i].y = bodyFrameRead[i * 9 + 8];
+		}
+		bodyFrameMat = Mat::zeros(424, 512, CV_8UC3);
+		bodyFrameMat = drawAperson(jointPoints, skeletonColor, 7, bodyFrameMat);
+
+
+
+		imshow("color image", colorFrameMat);
 		imshow("depth image", depthFrameMat);
 		imshow("bodyIndex image", bodyIndexFrameMat);
 		imshow("body image", bodyFrameMat);
 
+		colorVideoWriter.write(colorFrameMat);
 		depthVideoWriter.write(depthFrameMat);
 		bodyIndexVideoWriter.write(bodyIndexFrameMat);
 		bodyVideoWriter.write(bodyFrameMat);
 
 		waitKey(1);
-
-
+		
+		colorDataIn.close();
 		depthDataIn.close();
 		bodyIndexDataIn.close();
-		bodyIndexDataIn.close();
+		bodyDataIn.close();
 
+		memset(rgbDataArray, 0, rgbArraySize);
+		memset(yuy2DataArray, 10, yuy2ArraySize);
 
 		memset(depthFrameArray_rawDepth, 0, size_depthFrameArray_rawDepth);
 		memset(depthFrameArray_BGR, 0, size_depthFrameArray_BGR);
@@ -467,12 +461,8 @@ int main()
 
 		memset(bodyFrameRead, 0, skeletonSize);
 		memset(jointPoints, 0, 25);
+
 	}
-
-
-
-
-
 	colorVideoWriter.release();
 	depthVideoWriter.release();
 	bodyVideoWriter.release();
@@ -484,6 +474,7 @@ int main()
 	cvDestroyWindow("body image");
 
 	string colorPathNew = dirPath + "color.mp4";
+	rename(colorVideoPath.c_str(), colorPathNew.c_str());
 
 	colorPathNew = dirPath + "depth.mp4";
 	rename(depthVideoPath.c_str(), colorPathNew.c_str());
