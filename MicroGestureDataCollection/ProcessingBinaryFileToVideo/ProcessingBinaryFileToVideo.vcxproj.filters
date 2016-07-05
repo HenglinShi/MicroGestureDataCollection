@@ -29,7 +29,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RecordingToBinaryFile.cpp">
+    <ClCompile Include="ProcessingBinaryFileToVideo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

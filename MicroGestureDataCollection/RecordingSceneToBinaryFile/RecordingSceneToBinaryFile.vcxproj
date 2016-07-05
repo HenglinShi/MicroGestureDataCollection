@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{406AAD94-4816-4336-A728-4D3CDD5BD290}</ProjectGuid>
+    <ProjectGuid>{4B52F440-638F-43D4-A35A-919ADBFE6A3A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>RecordingToBinaryFile</RootNamespace>
+    <RootNamespace>RecordingSceneToBinaryFile</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -71,8 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\include\opencv;$(ProjectDir)\include\Windows SDKs\Kinect2;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\library\opencv\x86;$(ProjectDir)\library\Windows SDKs\Kinect2\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\include\opencv;$(SolutionDir)\include\Windows SDKs\Kinect2;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\library\opencv\x86;$(SolutionDir)\library\Windows SDKs\Kinect2\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -152,7 +152,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RecordingToBinaryFile.cpp" />
+    <ClCompile Include="RecordingSceneToBinaryFile.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
