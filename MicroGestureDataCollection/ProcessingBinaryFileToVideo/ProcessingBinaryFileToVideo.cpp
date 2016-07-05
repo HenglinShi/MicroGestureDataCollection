@@ -34,27 +34,132 @@ int yuy2ArraySize = 1920 * 1080 * 2;
 int rgbArraySize = 1920 * 1080 * 4;
 int colorPixNum = 1920 * 1080;
 
+CvScalar skeletonColor = cvScalar(100.0, 100.0, 0.0);
 typedef struct fileName {
 	int time;
 	int idx;
 	int flag;
 };
 
+
+Mat drawAperson(CvPoint *jointsPoints, CvScalar skeletonColor, int skeletonThickness, Mat tmpSkeletonMat) {
+
+
+	//HEAD + NECK
+	if ((jointsPoints[JointType_Head].x >= 0) && (jointsPoints[JointType_Neck].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_Head], jointsPoints[JointType_Neck], skeletonColor, skeletonThickness);
+
+	//NECK + SPINE SHOULDER;
+	if ((jointsPoints[JointType_Neck].x >= 0) && (jointsPoints[JointType_SpineShoulder].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_Neck], jointsPoints[JointType_SpineShoulder], skeletonColor, skeletonThickness);
+
+	//SPINE SHOULDER + RIGHT SHOULDER
+	if ((jointsPoints[JointType_SpineShoulder].x >= 0) && (jointsPoints[JointType_ShoulderRight].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_SpineShoulder], jointsPoints[JointType_ShoulderRight], skeletonColor, skeletonThickness);
+
+	//SPINE SHOULDER + LEFT SHOULDER
+	if ((jointsPoints[JointType_SpineShoulder].x >= 0) && (jointsPoints[JointType_ShoulderLeft].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_SpineShoulder], jointsPoints[JointType_ShoulderLeft], skeletonColor, skeletonThickness);
+	//RIGHT SHOULDER + RIGHT ELBOW
+
+	if ((jointsPoints[JointType_ShoulderRight].x >= 0) && (jointsPoints[JointType_ElbowRight].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_ShoulderRight], jointsPoints[JointType_ElbowRight], skeletonColor, skeletonThickness);
+
+	//LEFT SHOULDER + LEFT ELBOW
+	if ((jointsPoints[JointType_ShoulderLeft].x >= 0) && (jointsPoints[JointType_ElbowLeft].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_ShoulderLeft], jointsPoints[JointType_ElbowLeft], skeletonColor, skeletonThickness);
+
+	// RIGHT ELBOW + RIGHT WRIST
+	if ((jointsPoints[JointType_ElbowRight].x >= 0) && (jointsPoints[JointType_WristRight].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_ElbowRight], jointsPoints[JointType_WristRight], skeletonColor, skeletonThickness);
+
+	//LEFT ELBOW + LEFT WRIST
+	if ((jointsPoints[JointType_ElbowLeft].x >= 0) && (jointsPoints[JointType_WristLeft].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_ElbowLeft], jointsPoints[JointType_WristLeft], skeletonColor, skeletonThickness);
+
+	//RIGHT WRIST + RIGHT HAND
+	if ((jointsPoints[JointType_WristRight].x >= 0) && (jointsPoints[JointType_HandRight].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_WristRight], jointsPoints[JointType_HandRight], skeletonColor, skeletonThickness);
+
+	//LEFT WRIST + LEFT HAND
+	if ((jointsPoints[JointType_WristLeft].x >= 0) && (jointsPoints[JointType_HandLeft].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_WristLeft], jointsPoints[JointType_HandLeft], skeletonColor, skeletonThickness);
+
+	//RIGHT HAND + RIGHT THUMB
+	if ((jointsPoints[JointType_HandRight].x >= 0) && (jointsPoints[JointType_ThumbRight].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_HandRight], jointsPoints[JointType_ThumbRight], skeletonColor, skeletonThickness);
+
+	//LEFT HAND + LEFT THUMB
+	if ((jointsPoints[JointType_HandLeft].x >= 0) && (jointsPoints[JointType_ThumbLeft].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_HandLeft], jointsPoints[JointType_ThumbLeft], skeletonColor, skeletonThickness);
+
+	//RIGHT HAND + RIGHT HANDTIP
+	if ((jointsPoints[JointType_HandRight].x >= 0) && (jointsPoints[JointType_HandTipRight].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_HandRight], jointsPoints[JointType_HandTipRight], skeletonColor, skeletonThickness);
+
+	//LEFT HAND + LEFT HANDTIP
+	if ((jointsPoints[JointType_HandLeft].x >= 0) && (jointsPoints[JointType_HandTipLeft].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_HandLeft], jointsPoints[JointType_HandTipLeft], skeletonColor, skeletonThickness);
+
+	//SPINE SHOULDER + SPINE MID
+	if ((jointsPoints[JointType_SpineShoulder].x >= 0) && (jointsPoints[JointType_SpineMid].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_SpineShoulder], jointsPoints[JointType_SpineMid], skeletonColor, skeletonThickness);
+
+	//SPINE MID + SPINE BASE
+	if ((jointsPoints[JointType_SpineMid].x >= 0) && (jointsPoints[JointType_SpineBase].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_SpineMid], jointsPoints[JointType_SpineBase], skeletonColor, skeletonThickness);
+
+	//SPINE BASE + RIGHT HIP
+	if ((jointsPoints[JointType_SpineBase].x >= 0) && (jointsPoints[JointType_HipRight].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_SpineBase], jointsPoints[JointType_HipRight], skeletonColor, skeletonThickness);
+
+	//SPINE BASE + LEFT HIP
+	if ((jointsPoints[JointType_SpineBase].x >= 0) && (jointsPoints[JointType_HipLeft].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_SpineBase], jointsPoints[JointType_HipLeft], skeletonColor, skeletonThickness);
+
+	//RIGHT HIP + RIGHT KNEE
+	if ((jointsPoints[JointType_HipRight].x >= 0) && (jointsPoints[JointType_KneeRight].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_HipRight], jointsPoints[JointType_KneeRight], skeletonColor, skeletonThickness);
+
+	//LEFT HIP + LEFT KNEE
+	if ((jointsPoints[JointType_HipLeft].x >= 0) && (jointsPoints[JointType_KneeLeft].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_HipLeft], jointsPoints[JointType_KneeLeft], skeletonColor, skeletonThickness);
+
+	//RIGHT KNEE + RIGHT ANKLE
+	if ((jointsPoints[JointType_KneeRight].x >= 0) && (jointsPoints[JointType_AnkleRight].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_KneeRight], jointsPoints[JointType_AnkleRight], skeletonColor, skeletonThickness);
+
+	//LEFT KNEE + LEFT ANKLE
+	if ((jointsPoints[JointType_KneeLeft].x >= 0) && (jointsPoints[JointType_AnkleLeft].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_KneeLeft], jointsPoints[JointType_AnkleLeft], skeletonColor, skeletonThickness);
+
+	//RIGHT ANKLE + RIGHT FOOT
+	if ((jointsPoints[JointType_AnkleRight].x >= 0) && (jointsPoints[JointType_FootRight].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_AnkleRight], jointsPoints[JointType_FootRight], skeletonColor, skeletonThickness);
+
+	//LEFT ANKLE + LEFT FOOT
+	if ((jointsPoints[JointType_AnkleLeft].x >= 0) && (jointsPoints[JointType_FootLeft].x >= 0))
+		line(tmpSkeletonMat, jointsPoints[JointType_AnkleLeft], jointsPoints[JointType_FootLeft], skeletonColor, skeletonThickness);
+
+	return tmpSkeletonMat;
+
+}
+
 vector<string> TraverseDirectory(wchar_t Dir[MAX_PATH], string fileList)
 {
 	vector<string> fileNames;
 	WIN32_FIND_DATA FindFileData;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
-	wchar_t DirSpec[MAX_PATH];                  //定义要遍历的文件夹的目录  
+	wchar_t DirSpec[MAX_PATH];                  //????????????  
 	DWORD dwError;
 	StringCchCopy(DirSpec, MAX_PATH, Dir);
-	StringCchCat(DirSpec, MAX_PATH, TEXT("\\*"));   //定义要遍历的文件夹的完整路径\*  
+	StringCchCat(DirSpec, MAX_PATH, TEXT("\\*"));   //??????????????\*  
 
 
 
-	hFind = FindFirstFile(DirSpec, &FindFileData);          //找到文件夹中的第一个文件  
+	hFind = FindFirstFile(DirSpec, &FindFileData);          //????????????  
 
-	if (hFind == INVALID_HANDLE_VALUE)                               //如果hFind句柄创建失败，输出错误信息  
+	if (hFind == INVALID_HANDLE_VALUE)                               //??hFind??????,??????  
 	{
 		FindClose(hFind);
 	}
@@ -64,10 +169,10 @@ vector<string> TraverseDirectory(wchar_t Dir[MAX_PATH], string fileList)
 		char DefChar = ' ';
 		string sss;
 		ofstream csvFile(fileList.c_str());
-		while (FindNextFile(hFind, &FindFileData) != 0)                            //当文件或者文件夹存在时  
+		while (FindNextFile(hFind, &FindFileData) != 0)                            //???????????  
 		{
 
-			if ((FindFileData.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY) == 0)    //如果不是文件夹  
+			if ((FindFileData.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY) == 0)    //???????  
 			{
 
 				if (WideCharToMultiByte(CP_ACP, 0, FindFileData.cFileName, -1, ch, 260, &DefChar, NULL) == 0) {
@@ -79,7 +184,7 @@ vector<string> TraverseDirectory(wchar_t Dir[MAX_PATH], string fileList)
 				memset(&ch, 0, sizeof(ch));
 				csvFile << sss << endl;
 
-				wcout << Dir << "\\" << FindFileData.cFileName << endl;            //输出完整路径  
+				wcout << Dir << "\\" << FindFileData.cFileName << endl;            //??????  
 			}
 		}
 		FindClose(hFind);
@@ -148,7 +253,7 @@ void convertingYUYV2RGB(BYTE * yuy2, BYTE * rgb) {
 
 int main()
 {
-	string dirPath = "C:\\Users\\hshi\\Desktop\\SampleOutPut\\Sampleknhvkjhv\\";
+	string dirPath = "C:\\Users\\HenglinShi\\Desktop\\SampleOutPut\\GFHHTFGHG\\";
 
 	int slashPos = 0;
 	int dotPos = 0;
@@ -160,7 +265,7 @@ int main()
 	string tmpTime = "";
 	string tmpIdx = "";
 
-	vector<string> fileNames = TraverseDirectory(L"C:\\Users\\hshi\\Desktop\\SampleOutPut\\Sampleknhvkjhv\\color", "C:\\Users\\hshi\\Desktop\\SampleOutPut\\Sampleknhvkjhv\\fileList.csv");
+	vector<string> fileNames = TraverseDirectory(L"C:\\Users\\HenglinShi\\Desktop\\SampleOutPut\\GFHHTFGHG\\depth", "C:\\Users\\HenglinShi\\Desktop\\SampleOutPut\\GFHHTFGHG\\fileList.csv");
 	vector<fileName> fileNameStructs;
 
 
@@ -237,11 +342,15 @@ int main()
 	memset(bodyIndexFrameArray_rawBodyIndex, 0, size_depthFrameArray_rawDepth);
 	memset(bodyIndexFrameArray_BGR, 0, size_depthFrameArray_BGR);
 
+	float skeletonJoints[9 * JointType_Count] = { 0 };
+	int skeletonSize = sizeof(skeletonJoints);
+	float bodyFrameRead[225];
 
+	memset(bodyFrameRead, 0, 225);
+	CvPoint jointPoints[JointType_Count] = { cvPoint(-1, -1) };
 	int fourcc = -1;
 	Size colorFrameSize(1920, 1080);
 	Size depthFrameSize(512, 424);
-	
 
 	namedWindow("color image", CV_WINDOW_AUTOSIZE);
 	namedWindow("depth image", CV_WINDOW_AUTOSIZE);
@@ -263,26 +372,27 @@ int main()
 	VideoWriter bodyIndexVideoWriter(bodyIndexVideoPath.c_str(), fourcc, 28, depthFrameSize, true);
 	VideoWriter bodyVideoWriter(bodyVideoPath.c_str(), fourcc, 28, depthFrameSize, true);
 
-	if (!colorVideoWriter.isOpened() || !depthVideoWriter.isOpened() || !bodyIndexVideoWriter.isOpened() || !bodyVideoWriter.isOpened()) {
+	//!colorVideoWriter.isOpened() ||
+	if (!depthVideoWriter.isOpened() || !bodyIndexVideoWriter.isOpened() || !bodyVideoWriter.isOpened()) {
 		cout << "!!! Output video could not be opened" << std::endl;
 		return -1;
 	}
 
-	for (int i = 0; i < fileNames.size(); i++) {
-		cout << dirPath + "\\color\\" + fileNames.at(i) << endl;
-		colorDataIn.open((dirPath + "\\color\\" + fileNames.at(i)).c_str(), ios_base::in | ios_base::binary);
-		colorDataIn.read(reinterpret_cast<char*> (yuy2DataArray), sizeof(BYTE) * yuy2ArraySize);
+	//for (int i = 0; i < fileNames.size(); i++) {
+	//	cout << dirPath + "\\color\\" + fileNames.at(i) << endl;
+	//	colorDataIn.open((dirPath + "\\color\\" + fileNames.at(i)).c_str(), ios_base::in | ios_base::binary);
+	//	colorDataIn.read(reinterpret_cast<char*> (yuy2DataArray), sizeof(BYTE) * yuy2ArraySize);
 
 
-		convertingYUYV2RGB(yuy2DataArray, rgbDataArray);
-		colorFrameMat = Mat(1080, 1920, CV_8UC3, rgbDataArray);
-		imshow("color image", colorFrameMat);
-		waitKey(1);
-		colorVideoWriter.write(colorFrameMat);
-		colorDataIn.close();
-		memset(rgbDataArray, 0, rgbArraySize);
-		memset(yuy2DataArray, 10, yuy2ArraySize);
-	}
+	//	convertingYUYV2RGB(yuy2DataArray, rgbDataArray);
+	//	colorFrameMat = Mat(1080, 1920, CV_8UC3, rgbDataArray);
+	//	imshow("color image", colorFrameMat);
+	//	waitKey(1);
+	//	colorVideoWriter.write(colorFrameMat);
+	//	colorDataIn.close();
+	//	memset(rgbDataArray, 0, rgbArraySize);
+	//	memset(yuy2DataArray, 10, yuy2ArraySize);
+	//}
 
 
 
@@ -297,8 +407,16 @@ int main()
 
 
 
-		bodyIndexDataIn.open((dirPath + "\\body\\" + fileNames.at(i)).c_str(), ios_base::in | ios_base::binary);
-		bodyIndexDataIn.read(reinterpret_cast<char*> (bodyIndexFrameArray_rawBodyIndex), sizeof(BYTE) * size_depthFrameArray_rawDepth);
+		bodyDataIn.open((dirPath + "\\body\\" + fileNames.at(i)).c_str(), ios_base::in | ios_base::binary);
+		bodyDataIn.read(reinterpret_cast<char*>(bodyFrameRead), skeletonSize);
+
+		for (int i = 0; i < JointType_Count; i++) {
+			jointPoints[i].x = bodyFrameRead[i * 9 + 7];
+			jointPoints[i].y = bodyFrameRead[i * 9 + 8];
+		}
+
+		bodyFrameMat = Mat::zeros(424, 512, CV_8UC3);
+		bodyFrameMat = drawAperson(jointPoints, skeletonColor, 7, bodyFrameMat);
 
 		for (UINT i = 0; i < size_depthFrameArray_rawDepth; i++) {
 			bodyIndexFrameArray_BGR[i * 3] = bodyIndexFrameArray_rawBodyIndex[i] & 0x01 ? 0x00 : 0xFF;
@@ -329,7 +447,7 @@ int main()
 		imshow("bodyIndex image", bodyIndexFrameMat);
 		imshow("body image", bodyFrameMat);
 
-		depthVideoWriter.write(colorFrameMat);
+		depthVideoWriter.write(depthFrameMat);
 		bodyIndexVideoWriter.write(bodyIndexFrameMat);
 		bodyVideoWriter.write(bodyFrameMat);
 
@@ -341,12 +459,14 @@ int main()
 		bodyIndexDataIn.close();
 
 
-		
 		memset(depthFrameArray_rawDepth, 0, size_depthFrameArray_rawDepth);
 		memset(depthFrameArray_BGR, 0, size_depthFrameArray_BGR);
 
 		memset(depthFrameArray_rawDepth, 0, size_depthFrameArray_rawDepth);
 		memset(bodyIndexFrameArray_BGR, 0, size_depthFrameArray_BGR);
+
+		memset(bodyFrameRead, 0, skeletonSize);
+		memset(jointPoints, 0, 25);
 	}
 
 
@@ -354,7 +474,23 @@ int main()
 
 
 	colorVideoWriter.release();
+	depthVideoWriter.release();
+	bodyVideoWriter.release();
+	bodyIndexVideoWriter.release();
+
 	cvDestroyWindow("color image");
+	cvDestroyWindow("depth image");
+	cvDestroyWindow("boydIndex image");
+	cvDestroyWindow("body image");
+
 	string colorPathNew = dirPath + "color.mp4";
-	rename(colorVideoPath.c_str(), colorPathNew.c_str());
+
+	colorPathNew = dirPath + "depth.mp4";
+	rename(depthVideoPath.c_str(), colorPathNew.c_str());
+
+	colorPathNew = dirPath + "bodyIndex.mp4";
+	rename(bodyIndexVideoPath.c_str(), colorPathNew.c_str());
+	colorPathNew = dirPath + "body.mp4";
+	rename(bodyVideoPath.c_str(), colorPathNew.c_str());
+
 }
