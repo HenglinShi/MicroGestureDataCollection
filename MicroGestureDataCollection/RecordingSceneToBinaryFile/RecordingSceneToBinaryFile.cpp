@@ -23,38 +23,48 @@
 #include <mfidl.h>
 #include <Mfreadwrite.h>
 #include <mferror.h>
-//#include "Eigen/Core"
 
-#define CHANNEL 4
-#define TESTMODE false
 using namespace std;
 using namespace cv;
-//#include "KinectInstance.h"
-//#include "FrameReader.h"
 
-//using Eigen::ma
+#define COLOR_FRAME_CHANNEL_BGR 3
+#define COLOR_FRAME_CHANNEL_BGRA 4
 
-bool test = true;
-IKinectSensor *kinectSensor = nullptr;
-ICoordinateMapper* multisourceCoordinateMapper;
-IMultiSourceFrameReader * multiSourceFrameReader = nullptr;
+#define TESTMODE false
 
+//**********************************************************************************************
+//**********************************************************************************************
+//Kinect sdk variables																		/**/
+																							/**/
+//overall sensor variables																	/**/
+IKinectSensor *kinectSensor = nullptr;														/**/
+ICoordinateMapper* multisourceCoordinateMapper;												/**/
+IMultiSourceFrameReader * multiSourceFrameReader = nullptr;									/**/
+IMultiSourceFrame * multiSourceFrame = nullptr;												/**/
+																							/**/
+//color frame variables																		/**/
+IColorFrameReference * mColorFrameReference = nullptr;										/**/
+IColorFrame *mColorFrame = nullptr;															/**/
+IFrameDescription * mColorFrameDescription = nullptr;										/**/
+																							/**/
+//depth frame variables																		/**/
+IDepthFrameReference * mDepthFrameReference = nullptr;										/**/
+IDepthFrame *mDepthFrame = nullptr;															/**/
+IFrameDescription * mDepthFrameDescription = nullptr;										/**/
+																							/**/
+//body index frame variables																/**/
+IBodyIndexFrameReference * mBodyIndexFrameReference = nullptr;								/**/
+IBodyIndexFrame *mBodyIndexFrame = nullptr;													/**/
+IFrameDescription * mBodyIndexFrameDescription = nullptr;									/**/
+																							/**/
+//body frame variables																		/**/
+IBodyFrameReference * mBodyFrameReference = nullptr;										/**/
+IBodyFrame * mBodyFrame = nullptr;															/**/
+																							/**/
+//**********************************************************************************************
+//**********************************************************************************************
 
-IBodyFrameReference * mBodyFrameReference = nullptr;
-IColorFrameReference * mColorFrameReference = nullptr;
-IDepthFrameReference * mDepthFrameReference = nullptr;
-IBodyIndexFrameReference * mBodyIndexFrameReference = nullptr;
-
-IMultiSourceFrame * multiSourceFrame = nullptr;
-IBodyFrame * mBodyFrame = nullptr;
-IColorFrame *mColorFrame = nullptr;
-IBodyIndexFrame *mBodyIndexFrame = nullptr;
-IDepthFrame *mDepthFrame = nullptr;
-
-IFrameDescription * mColorFrameDescription = nullptr;
-IFrameDescription * mBodyIndexFrameDescription = nullptr;
-IFrameDescription * mDepthFrameDescription = nullptr;
-
+//Frame heights and widths
 int bodyFrameHeight = 0;
 int bodyFrameWidth = 0;
 int colorFrameHeight = 0;
@@ -64,8 +74,21 @@ int depthFrameWidth = 0;
 int bodyIndexFrameHeight = 0;
 int bodyIndexFrameWidth = 0;
 
+//Distance threashold for depth frame
 USHORT depthFrameMinReliableDistance = 0;
 USHORT depthFrameMaxReliableDistance = 0;
+
+//Frame size, for OPENCV OPENCV
+Size colorFrameSize(colorFrameWidth, colorFrameHeight);
+Size depthFrameSize(depthFrameWidth, depthFrameHeight);
+Size bodyIndexFrame(bodyIndexFrameWidth, bodyIndexFrameHeight);
+Size bodyFrame(bodyFrameWidth, bodyFrameHeight);
+
+
+
+UINT16 * depthFrameArray = nullptr;
+UINT  depthFrameArraySize = 0;
+
 
 
 BYTE colorFrameArrayArray[1920 * 1080 * 4] = { 0 };
@@ -73,8 +96,7 @@ BYTE * colorFrameArray;
 UINT colorFrameArraySize = 0;
 
 
-UINT16 * depthFrameArray = nullptr;
-UINT  depthFrameArraySize = 0;
+
 BYTE * bodyIndexFrameArray = nullptr;
 UINT bodyIndexFrameArraySize = 0;
 
@@ -527,7 +549,7 @@ int main() {
 	int frameNum = 0;
 
 
-	string DESTINATIONPATH = "C:\\Users\\hshi\\Desktop\\SampleOutPut";
+	string DESTINATIONPATH = "C:\\Users\\chaoyu\\Desktop\\SampleOutPut";
 
 	string colorMappintToDepthDirPath = "\\colorMappingToDepth";
 	string colorDataDirPath = "\\color";
