@@ -71,6 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)\include\opencv;$(SolutionDir)\include\Windows SDKs\Kinect2;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\library\opencv\x86;$(SolutionDir)\library\Windows SDKs\Kinect2\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -92,6 +94,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Kinect20.lib;opencv_ml2413d.lib;opencv_calib3d2413d.lib;opencv_contrib2413d.lib;opencv_core2413d.lib;opencv_features2d2413d.lib;opencv_flann2413d.lib;opencv_gpu2413d.lib;opencv_highgui2413d.lib;opencv_imgproc2413d.lib;opencv_legacy2413d.lib;opencv_objdetect2413d.lib;opencv_ts2413d.lib;opencv_video2413d.lib;opencv_nonfree2413d.lib;opencv_ocl2413d.lib;opencv_photo2413d.lib;opencv_stitching2413d.lib;opencv_superres2413d.lib;opencv_videostab2413d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -145,11 +148,30 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BodyFrame.h" />
+    <ClInclude Include="BodyIndexFrame.h" />
+    <ClInclude Include="ColorFrame.h" />
+    <ClInclude Include="DepthFrame.h" />
+    <ClInclude Include="Frame.h" />
+    <ClInclude Include="FrameReader.h" />
+    <ClInclude Include="KinectFrameReader.h" />
+    <ClInclude Include="KinectSensor.h" />
+    <ClInclude Include="MultiSourcesFrameReader.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BodyFrame.cpp" />
+    <ClCompile Include="BodyIndexFrame.cpp" />
+    <ClCompile Include="ColorFrame.cpp" />
+    <ClCompile Include="DepthFrame.cpp" />
+    <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="FrameReader.cpp" />
+    <ClCompile Include="KinectFrameReader.cpp" />
+    <ClCompile Include="KinectSensor.cpp" />
     <ClCompile Include="KinectToolKit.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MultiSourcesFrameReader.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
